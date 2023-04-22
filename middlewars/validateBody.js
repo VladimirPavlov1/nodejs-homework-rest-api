@@ -1,4 +1,4 @@
-const { func } = require("joi");
+
 const { HttpError } = require("../helpers");
 
 const validateBody = schema => {
