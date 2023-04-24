@@ -1,6 +1,7 @@
-const contacts = require("../models/contacts");
 
-const { HttpError } = require("../helpers");
+const {Contact} = require("../models/contact")
+
+// const { HttpError } = require("../helpers");
 
 const { ctrlWrapper } = require("../helpers")
 
@@ -10,7 +11,8 @@ const { ctrlWrapper } = require("../helpers")
 
 const getAll = async (req, res) => {
 
-    const result = await contacts.listContacts();
+    const result = await Contact.find({},"-__v");
+    console.log(result)
     res.json(result)
 
 
@@ -19,7 +21,8 @@ const getAll = async (req, res) => {
 const getById = async (req, res) => {
 
     const { contactId } = req.params;
-    const result = await contacts.getContactById(contactId);
+    console.log(contactId)
+    const result = await Contact.findById(contactId);
     if (!result) {
         throw HttpError(404, "Not found")
     }
@@ -29,8 +32,8 @@ const getById = async (req, res) => {
 
 const add = async (req, res) => {
 
-    const { name, email, phone } = req.body;
-    const result = await contacts.addContact(name, email, phone);
+   
+    const result = await Contact.create(req.body)
     res.status(201).json(result)
 
 }
@@ -38,7 +41,7 @@ const add = async (req, res) => {
 const deleteById = async (req, res) => {
 
     const { contactId } = req.params;
-    const result = await contacts.removeContact(contactId);
+    const result = await Contact.findByIdAndRemove(contactId);
     if (!result) {
         throw HttpError(404, "Not found")
     }
@@ -51,15 +54,26 @@ const updateById = async (req, res) => {
 
     const { contactId } = req.params;
     const body = req.body
-    const result = await contacts.updateContact(contactId, body);
+    const result = await Contact.findByIdAndUpdate(contactId, body,{new:true});
     res.json(result)
 
 }
+
+const updateFavorite = async (req, res) => {
+
+
+    const { contactId } = req.params;
+    const body = req.body
+    const result = await Contact.findByIdAndUpdate(contactId, body,{new:true});
+    res.json(result)
+}
+
 
 module.exports = {
     getAll: ctrlWrapper(getAll),
     getById: ctrlWrapper(getById),
     add: ctrlWrapper(add),
     deleteById: ctrlWrapper(deleteById),
-    updateById: ctrlWrapper(updateById)
+    updateById: ctrlWrapper(updateById),
+    updateFavorite:ctrlWrapper(updateFavorite)
 }
