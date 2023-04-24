@@ -1,7 +1,7 @@
 
 const {Contact} = require("../models/contact")
 
-// const { HttpError } = require("../helpers");
+const { HttpError } = require("../helpers");
 
 const { ctrlWrapper } = require("../helpers")
 
@@ -12,7 +12,7 @@ const { ctrlWrapper } = require("../helpers")
 const getAll = async (req, res) => {
 
     const result = await Contact.find({},"-__v");
-    console.log(result)
+    
     res.json(result)
 
 
